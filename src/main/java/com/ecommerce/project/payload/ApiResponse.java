@@ -1,4 +1,13 @@
 package com.ecommerce.project.payload;
 
-public class ApiRespose {
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ApiResponse {
+    public String message;
+    public boolean status;
 }
