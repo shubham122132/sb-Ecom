@@ -37,7 +37,6 @@ public class ProductController {
             @RequestParam(name = "sortBy",defaultValue = AppConstant.SORT_PRODUCT_BY,required = false) String sortBy,
             @RequestParam(name = "sortOrder",defaultValue = AppConstant.SORT_DIR,required = false) String sortOrder
 
-
     ){
         ProductResponse productResponse = productService.searchByCategory(categoryId,pageNumber,pageSize,sortBy,sortOrder);
         return new ResponseEntity<>(productResponse,HttpStatus.OK);
@@ -79,4 +78,5 @@ public class ProductController {
         ProductDTO updatedProduct = productService.updateProductImage(productId,image);
         return new ResponseEntity<>(updatedProduct,HttpStatus.OK);
     }
+
 }
