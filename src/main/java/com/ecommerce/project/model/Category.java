@@ -20,6 +20,9 @@ public class Category {
     @NotBlank
     @Size(min = 4, message = "Category Name must contain 5 characters")
     private String categoryName;
+
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL)
     private List<Product> products;
+
+
 }
