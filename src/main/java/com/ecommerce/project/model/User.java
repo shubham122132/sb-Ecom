@@ -30,7 +30,7 @@ public class User {
     @NotBlank
     @Size(max = 20)
     @Column(name = "username")
-    private String userName;
+    private String username;
 
     @NotBlank
     @Email
@@ -42,7 +42,7 @@ public class User {
     private String password;
 
     public User(String userName, String email, String password) {
-        this.userName = userName;
+        this.username = userName;
         this.email = email;
         this.password = password;
     }
@@ -58,10 +58,10 @@ public class User {
 
     @Getter
     @Setter
-    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE})
-    @JoinTable(name = "user_addresses",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "address_id"))
+    @OneToMany(mappedBy = "user", cascade = {CascadeType.PERSIST,CascadeType.MERGE},orphanRemoval = true)
+//    @JoinTable(name = "user_addresses",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "address_id"))
     private List<Address> addresses = new ArrayList<>();
 
     @ToString.Exclude
@@ -69,5 +69,10 @@ public class User {
             cascade = {CascadeType.PERSIST,CascadeType.MERGE},
             orphanRemoval = true)
     private Set<Product> products;
+
+    @ToString.Exclude
+    @OneToOne(mappedBy = "user",cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.REMOVE},
+    orphanRemoval = true)
+    private Cart cart;
 }
 

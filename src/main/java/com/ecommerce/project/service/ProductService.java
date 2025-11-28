@@ -1,8 +1,8 @@
 package com.ecommerce.project.service;
 
-import com.ecommerce.project.model.Category;
 import com.ecommerce.project.payload.ProductDTO;
 import com.ecommerce.project.payload.ProductResponse;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;

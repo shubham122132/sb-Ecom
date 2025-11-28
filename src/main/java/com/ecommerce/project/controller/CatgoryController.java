@@ -3,7 +3,7 @@ package com.ecommerce.project.controller;
 import com.ecommerce.project.config.AppConstant;
 import com.ecommerce.project.payload.CategoryDTO;
 import com.ecommerce.project.payload.CategoryResponse;
-import com.ecommerce.project.service.CategoryServiceImp;
+import com.ecommerce.project.service.CategoryService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class CatgoryController {
     @Autowired
-    private CategoryServiceImp cateService;
+    private CategoryService cateService;
 
 
     @GetMapping("/public/categories")
