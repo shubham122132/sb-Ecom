@@ -5,7 +5,7 @@ import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.model.Cart;
 import com.ecommerce.project.model.Category;
 import com.ecommerce.project.model.Product;
-import com.ecommerce.project.payload.CartDto;
+import com.ecommerce.project.payload.CartDTO;
 import com.ecommerce.project.payload.ProductDTO;
 import com.ecommerce.project.payload.ProductResponse;
 import com.ecommerce.project.repository.CartRepository;
@@ -196,8 +196,8 @@ public class ProductServiceImp implements ProductService {
         //update all the carts
         List<Cart> carts = cartRepository.findCartsByProductId(productId);
 
-        List<CartDto> cartDtos = carts.stream().map(cart -> {
-            CartDto cartDto = modelMapper.map(cart,CartDto.class);
+        List<CartDTO> cartDTOS = carts.stream().map(cart -> {
+            CartDTO cartDto = modelMapper.map(cart, CartDTO.class);
             List<ProductDTO> products = cart.getCartItems().stream()
                     .map(p -> modelMapper.map(p.getProduct(),ProductDTO.class))
                     .collect(Collectors.toList());
@@ -207,7 +207,7 @@ public class ProductServiceImp implements ProductService {
         }).collect(Collectors.toList());
 
 
-        cartDtos.forEach(cart -> cartService.updateProductInCart(cart.getCartId(),productId));
+        cartDTOS.forEach(cart -> cartService.updateProductInCart(cart.getCartId(),productId));
 
 
         return modelMapper.map(updatedProduct, ProductDTO.class);

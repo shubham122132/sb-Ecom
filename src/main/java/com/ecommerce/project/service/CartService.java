@@ -1,20 +1,19 @@
 package com.ecommerce.project.service;
 
-import com.ecommerce.project.payload.CartDto;
+import com.ecommerce.project.payload.CartDTO;
 import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 public interface CartService {
-    CartDto addProductToCart(Long productId, Integer quantity);
+    CartDTO addProductToCart(Long productId, Integer quantity);
 
-    List<CartDto> getAllCarts();
+    List<CartDTO> getAllCarts();
 
-    CartDto getCart(String emailId, Long cartId);
+    CartDTO getCart(String emailId, Long cartId);
 
     @Transactional
-    CartDto updateProductQuantityInCart(Long productId, int quantity);
+    CartDTO updateProductQuantityInCart(Long productId, int quantity);
 
     @Transactional
     String deleteProductFromCart(Long cartId, Long productId);

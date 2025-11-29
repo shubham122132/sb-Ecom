@@ -7,13 +7,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CartItemDto {
-    private Long cartItemId;
-    private CartDto cart;
-    private ProductDTO productDTO;
+public class OrderItemDTO {
+    private Long orderItemId;
+    private ProductDTO product;
     private Integer quantity;
-    private Double discount;
-    private Double totalPrice;
-
+    private double discount;
+    private double orderedProductPrice;
 }
-
