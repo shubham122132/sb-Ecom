@@ -4,7 +4,6 @@ import com.ecommerce.project.exceptions.ApiException;
 import com.ecommerce.project.exceptions.ResourceNotFoundException;
 import com.ecommerce.project.model.*;
 import com.ecommerce.project.payload.OrderDTO;
-import com.ecommerce.project.payload.OrderItemDTO;
 import com.ecommerce.project.repository.*;
 import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;

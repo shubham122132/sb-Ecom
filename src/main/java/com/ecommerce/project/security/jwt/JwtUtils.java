@@ -55,28 +55,33 @@ public class JwtUtils {
             return null;
         }
     }
+
         // generate JWT cookie
     public ResponseCookie generateJwtCookie(UserDetailsImpl userPrinciple){
-        String jwt = generateTockenFromUsername(userPrinciple.getUsername());
+        String jwt = generateTokenFromUsername(userPrinciple.getUsername());
         ResponseCookie cookie = ResponseCookie.from(jwtCookie,jwt)
                 .path("/api")
                 .maxAge(24*60*60)
                 .httpOnly(true)
                 .secure(true)
-                .sameSite("Strict")
+                .sameSite("Lax")
                 .build();
         return cookie;
     }
 
     // generate Clean Cookie
-    public ResponseCookie getCleanJwtCookie(){
-         ResponseCookie cookie = ResponseCookie.from(jwtCookie,null)
+    public ResponseCookie getCleanJwtCookie() {
+        return ResponseCookie.from(jwtCookie, "")
                 .path("/api")
+                .maxAge(0)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("Lax")
                 .build();
-        return cookie;
     }
+
     // getting Token from username
-    public String generateTockenFromUsername(String username){
+    public String generateTokenFromUsername(String username){
 
         return Jwts.builder()
                 .subject(username)
@@ -113,7 +118,7 @@ public class JwtUtils {
                     .getSubject();
             return true;
         } catch (MalformedJwtException e) {
-            logger.error("Invalid Jwt Token: {}", e.getMessage());
+            logger.debug("JWT validation failed: {}", e.getClass().getSimpleName());
         } catch (ExpiredJwtException e) {
             logger.error("Jwt Token is Expired: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {

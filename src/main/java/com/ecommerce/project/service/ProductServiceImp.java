@@ -18,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -40,6 +41,9 @@ public class ProductServiceImp implements ProductService {
 
     @Value("${project.image}")
     private String path;
+
+    @Value("${image.base.url}")
+    private String imageBaseUrl;
 
     @Autowired
     private CartRepository cartRepository;
@@ -90,20 +94,50 @@ public class ProductServiceImp implements ProductService {
     }
 
     @Override
-    public ProductResponse getAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+    public ProductResponse getAllProducts( Integer pageNumber, Integer pageSize, String sortBy, String sortOrder, String keyword , String category) {
 
         Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
                 ? Sort.by(sortBy).ascending()
                 : Sort.by(sortBy).descending();
-        Pageable pageDetails = PageRequest.of(pageNumber, pageSize,sortByAndOrder);
+        Pageable pageDetails = PageRequest.of( pageNumber, pageSize,sortByAndOrder);
         //check if product size is 0 or not
-        Page<Product> productPage = productRepository.findAll(pageDetails);
+
+        Specification<Product> spec = Specification.allOf();
+
+        if (keyword != null && !keyword.isBlank()) {
+            spec = spec.and((root, query, cb) ->
+                    cb.like(
+                            cb.lower(root.get("productName")),
+                            "%" + keyword.toLowerCase().trim() + "%"
+                    )
+            );
+        }
+
+        if (category != null && !category.isBlank()) {
+            spec = spec.and((root, query, cb) ->
+                    cb.equal(
+                            cb.lower(root.get("category").get("categoryName")),
+                            category.toLowerCase().trim()
+                    )
+            );
+        }
+
+        Page<Product> productPage =
+                productRepository.findAll(spec, pageDetails);
+
+
+
         List<Product> products= productPage.getContent();
         if(products.isEmpty()){
             throw new ApiException("no Product exists");
         }
         List<ProductDTO> productDTOS = products.stream()
-                .map(product->modelMapper.map(product, ProductDTO.class)).toList();
+                .map(product->{
+                        ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+                        productDTO.setImage(constructImageUrl(product.getImage()));
+                        return productDTO;
+                })
+                .toList();
         // prepare response
         ProductResponse productResponse = new ProductResponse();
         productResponse.setContent(productDTOS);
@@ -113,6 +147,10 @@ public class ProductServiceImp implements ProductService {
         productResponse.setTotalPages(productPage.getTotalPages());
         productResponse.setLastPage(productPage.isLast());
         return productResponse;
+    }
+
+    private String constructImageUrl(String imageName){
+        return imageBaseUrl.endsWith("/")?imageBaseUrl + imageName : imageBaseUrl + "/" +imageName;
     }
 
 
